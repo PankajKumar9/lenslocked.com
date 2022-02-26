@@ -8,7 +8,7 @@ import (
 /* this is the function called anytime
 somebody comes to our webserver */
 func handlerFunc(w http.ResponseWriter, r *http.Request) { /* w http.ResponseWriter, this is where we write our response */
-	/*fprint me first argument is ,print kaha krna h
+	/*fprint me first argument is ,print kaha krna  h
 	  jaise yaha w pe krna h */
 	fmt.Fprint(w, "<h1> Welcome to my awesome site </h1>")
 
