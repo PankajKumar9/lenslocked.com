@@ -9,9 +9,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"views"
-
 	"github.com/gorilla/mux"
+	"github.com/pilu/fresh/views"
 )
 
 //var homeTemplate *template.Template
