@@ -6,25 +6,26 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+	"log"
 	"net/http"
 
+	"github.com/PankajKumar9/lenslocked.com/views"
 	"github.com/gorilla/mux"
-	"github.com/pilu/fresh/views"
 )
 
-//var homeTemplate *template.Template
-//var contactTemplate *template.Template
+var homeView *views.View
+var contactView *views.View
 
-func home(w http.ResponseWriter, r *http.Request, v *views.View) {
+func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Contact-Type", "text/html")
-	if err := v.Template.Execute(w, nil); err != nil {
+	if err := homeView.Template.ExecuteTemplate(w, homeView.Layout, nil); err != nil {
+		log.Println("yaha fata @1")
 		panic(err)
 	}
 }
-func contact(w http.ResponseWriter, r *http.Request, v *views.View) {
+func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if err := v.Template.Execute(w, nil); err != nil {
+	if err := contactView.Template.ExecuteTemplate(w, contactView.Layout, nil); err != nil {
 		panic(err)
 	}
 	//fmt.Fprint(w, "To get in touch,please send an email to <a href = \"mailto:support@lenslock\">support @lenslocked</a>")
@@ -42,11 +43,8 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var err error
-
-	homeTemplate := NewView("views/home.gohtml", "views/layouts/footer.gohtml")
-
-	contactTemplate := template.ParseFiles("views/contact.gohtml")
+	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 
 	r := mux.NewRouter()
 
