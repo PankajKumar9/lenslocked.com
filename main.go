@@ -17,15 +17,15 @@ var (
 	contactView *views.View
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Contact-Type", "text/html")
+// func home(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Contact-Type", "text/html")
 
-	must(homeView.Render(w, nil))
-}
-func contact(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Contact-Type", "text/html")
-	must(contactView.Render(w, nil))
-}
+// 	must(homeView.Render(w, nil))
+// }
+// func contact(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Contact-Type", "text/html")
+// 	must(contactView.Render(w, nil))
+// }
 
 // func NotFound(w http.ResponseWriter, r *http.Request) {
 // 	w.Header().Set("Content-Type", "text/html")
@@ -34,14 +34,18 @@ func contact(w http.ResponseWriter, r *http.Request) {
 // }
 
 func main() {
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
-	contactView = views.NewView("bootstrap", "views/contact.gohtml")
+
+	// 	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	// 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 	usersC := controllers.NewUsers()
 
 	r := mux.NewRouter()
+	staticC := controllers.NewStatic()
+	r.Handle("/",staticC.Home).Methods("GET")
+	r.Handle("/contact",staticC.Contact).Methods("GET")
 
-	r.HandleFunc("/", home).Methods("GET")
-	r.HandleFunc("/contact", contact).Methods("GET")
+	// r.HandleFunc("/", home).Methods("GET")
+	// r.HandleFunc("/contact", contact).Methods("GET")
 	r.HandleFunc("/signup", usersC.New).Methods("GET")
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	// r.HandleFunc("/faq", faq)

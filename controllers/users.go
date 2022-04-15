@@ -13,7 +13,7 @@ type Users struct {
 
 func NewUsers() *Users {
 	return &Users{
-		NewView: views.NewView("bootstrap", "views/users/new.gohtml"),
+		NewView: views.NewView("bootstrap", "users/new"),
 	}
 }
 
@@ -22,15 +22,25 @@ func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 	u.NewView.Render(w, nil)
 }
 
+//struct tags k baare me dekhne ka
+type SignupForm struct {
+	Email    string `schema:"email"`
+	Password string `schema:"password"`
+}
+
 //post signup
 func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
+
+	var form SignupForm
+	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(w, r.PostForm["email"])
-	// fmt.Fprintln(w, r.PostFormValue("email"))
-	fmt.Fprintln(w, r.PostForm["password"])
-	//fmt.Fprintln(w, r.PostFormValue("password"))
-	fmt.Fprintln(w, "Pretend theis is a fake message")
+	fmt.Fprintln(w, form)
+
+	// fmt.Fprintln(w, r.PostForm["email"])
+	// // fmt.Fprintln(w, r.PostFormValue("email"))
+	// fmt.Fprintln(w, r.PostForm["password"])
+	// //fmt.Fprintln(w, r.PostFormValue("password"))
+	// fmt.Fprintln(w, "Pretend theis is a fake message")
 
 }
