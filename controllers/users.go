@@ -7,18 +7,18 @@ import (
 	"github.com/PankajKumar9/lenslocked.com/views"
 )
 
-type Users struct {
+type UsersSite struct {
 	NewView *views.View
 }
 
-func NewUsers() *Users {
-	return &Users{
+func NewUsers() *UsersSite {
+	return &UsersSite{
 		NewView: views.NewView("bootstrap", "users/new"),
 	}
 }
 
 //get signup
-func (u *Users) New(w http.ResponseWriter, r *http.Request) {
+func (u *UsersSite) New(w http.ResponseWriter, r *http.Request) {
 	u.NewView.Render(w, nil)
 }
 
@@ -29,7 +29,7 @@ type SignupForm struct {
 }
 
 //post signup
-func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
+func (u *UsersSite) Create(w http.ResponseWriter, r *http.Request) {
 
 	var form SignupForm
 	if err := parseForm(r, &form); err != nil {

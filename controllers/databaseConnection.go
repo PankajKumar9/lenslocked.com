@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/PankajKumar9/lenslocked.com/models"
+	
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,7 +20,7 @@ const connectionString = "mongodb+srv://pnkjdh:pankaj2mongo@cluster0.aroxb.mongo
 const dbName = "Lenslocked"
 const colName = "watchlist"
 
-var collection *mongo.Collection
+var Collection *mongo.Collection
 
 func init() {
 	//client options
@@ -34,7 +34,7 @@ func init() {
 		log.Fatal(err)
 	}
 	fmt.Println("MongoDB connection success")
-	collection = client.Database(dbName).Collection(colName)
+	Collection = client.Database(dbName).Collection(colName)
 	fmt.Println("Collection instance is ready")
 
 }
@@ -42,8 +42,8 @@ func init() {
 //this is where mongodb hel  pers ß
 //insert 1 record
 
-func insertOneMovie(movie models.Netflix) {
-	inserted, err := collection.InsertOne(context.Background(), movie)
+func insertOneMovie(movie Netflix) {
+	inserted, err := Collection.InsertOne(context.Background(), movie)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func updateOneMovie(movieID string) {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"watched": true}}
 
-	result, err := collection.UpdateOne(context.Background(), filter, update)
+	result, err := Collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		panic(err)
 	}
@@ -73,7 +73,7 @@ func updateOneMovie(movieID string) {
 func deleteOneMovie(movieId string) {
 	id, _ := primitive.ObjectIDFromHex(movieId)
 	filter := bson.M{"_id": id}
-	deleteCount, err := collection.DeleteOne(context.Background(), filter)
+	deleteCount, err := Collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		panic(err)
 	}
@@ -83,7 +83,7 @@ func deleteOneMovie(movieId string) {
 //delete all records from mongoDB
 
 func deleteAllMovie() int64 {
-	deleteResult, err := collection.DeleteMany(context.Background(), bson.D{{}}, nil)
+	deleteResult, err := Collection.DeleteMany(context.Background(), bson.D{{}}, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -94,7 +94,7 @@ func deleteAllMovie() int64 {
 // get all movies from database
 
 func getAllMovies() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
+	cur, err := Collection.Find(context.Background(), bson.D{{}})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -127,7 +127,7 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-Control-Allow-Methods", "POST")
 
-	var movie models.Netflix
+	var movie Netflix
 	fmt.Println("prinintg request")
 	fmt.Println(r)
 	json.NewDecoder(r.Body).Decode(&movie)
@@ -167,7 +167,18 @@ func DeleteAllMovies(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 //lenslocked stuff
 
-func CreateOrder(user models.Users,amount int,desc string){}
+func CreateOrder(user Users, amount int, desc string) {
+	x := Order{
+		UserID:      "abcd",
+		Amount:      amount,
+		Description: desc,
+	}
+	inserted, err := Collection.InsertOne(context.Background(), x)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted one movie in db with id", inserted.InsertedID)
+}
