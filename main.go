@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/PankajKumar9/lenslocked.com/controllers"
+	"github.com/PankajKumar9/lenslocked.com/models"
 	"github.com/PankajKumar9/lenslocked.com/views"
 	"github.com/gorilla/mux"
 )
@@ -40,9 +41,17 @@ func main() {
 	usersC := controllers.NewUsers()
 
 	r := mux.NewRouter()
+
+	r.HandleFunc("/api/movie", controllers.CreateMovie).Methods("POST")
+	r.HandleFunc("/api/movies", controllers.GetMyAllMovies).Methods("GET")
+	r.HandleFunc("/api/movie/{id}", controllers.MarkAsWatched).Methods("PUT")
+
+	r.HandleFunc("/api/movie/{id}", controllers.DeleteAMovie).Methods("DELETE")
+	r.HandleFunc("/api/deleteallmovie", controllers.DeleteAllMovies).Methods("DELETE")
+
 	staticC := controllers.NewStatic()
-	r.Handle("/",staticC.Home).Methods("GET")
-	r.Handle("/contact",staticC.Contact).Methods("GET")
+	r.Handle("/", staticC.Home).Methods("GET")
+	r.Handle("/contact", staticC.Contact).Methods("GET")
 
 	// r.HandleFunc("/", home).Methods("GET")
 	// r.HandleFunc("/contact", contact).Methods("GET")
@@ -50,6 +59,10 @@ func main() {
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	// r.HandleFunc("/faq", faq)
 	// r.NotFoundHandler = http.HandlerFunc(NotFound)
+	var u models.Users
+	controllers.CreateOrder(u,1001,"Fake description #1")
+
+
 	http.ListenAndServe(":3000", r)
 
 }
