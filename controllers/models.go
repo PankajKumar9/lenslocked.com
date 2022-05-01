@@ -127,14 +127,6 @@ func (us *UserService) Authenticate(email, password string) (*Users, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("&&&&&&&&")
-	fmt.Println(fmt.Sprintf("%v", foundUser))
-	fmt.Println(foundUser.Password)
-	fmt.Println("&&&&&&&")
-	fmt.Println(password)
-	fmt.Println("compare these :")
-	fmt.Println(fmt.Sprintf("this is stored %v", []byte(foundUser.PasswordHash)))
-	fmt.Println(fmt.Sprintf("this is input %v", []byte(password+userPwPepper)))
 	err = bcrypt.CompareHashAndPassword([]byte(foundUser.PasswordHash), []byte(password+userPwPepper))
 	if err != nil {
 		switch err {
