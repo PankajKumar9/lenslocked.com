@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 
-	
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectionString = "mongodb+srv://pnkjdh:pankaj2mongo@cluster0.aroxb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const connectionString = "mongodb://localhost:27017"
 
 const dbName = "Lenslocked"
 const colName = "watchlist"
@@ -28,9 +27,9 @@ func init() {
 	clientOption := options.Client().ApplyURI(connectionString)
 
 	//connect to mongodb
-
 	client, err := mongo.Connect(context.TODO(), clientOption)
 	if err != nil {
+
 		log.Fatal(err)
 	}
 	fmt.Println("MongoDB connection success")

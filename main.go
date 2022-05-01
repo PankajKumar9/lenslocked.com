@@ -5,13 +5,12 @@ package main
 //init functions for packages will run first
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/PankajKumar9/lenslocked.com/controllers"
-	
+
 	"github.com/PankajKumar9/lenslocked.com/views"
 	"github.com/gorilla/mux"
 )
@@ -62,19 +61,24 @@ func main() {
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	// r.HandleFunc("/faq", faq)
 	// r.NotFoundHandler = http.HandlerFunc(NotFound)
+	r.Handle("/login", usersC.LoginView).Methods("GET")
+	r.HandleFunc("/login", usersC.Login).Methods("POST")
 	var u controllers.Users
+	u.Password = "hello there"
+	lx := controllers.UserService{}
 	controllers.CreateOrder(u, 1001, "Fake description #1")
 	y := controllers.Order{
 		UserID:      "abcd",
 		Amount:      60,
 		Description: "straing from main",
 	}
-	inserted, err := controllers.Collection.InsertOne(context.Background(), y)
+	u.Orders = []controllers.Order{y}
+	inserted, err := lx.Create(&u)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Inserted from outside", inserted.InsertedID)
+	fmt.Println("Inserted from outside", inserted.Email)
 
 	http.ListenAndServe(":3000", r)
 
