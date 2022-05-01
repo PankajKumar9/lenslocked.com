@@ -34,8 +34,8 @@ type Users struct {
 	Email        string             `json:"email,omitempty" bson:"email"`
 	Color        string             `json:"color,omitempty" bson:"color"`
 	Orders       []Order            `json:"orders,omitempty" bson:"orders"`
-	Password     string
-	PasswordHash string
+	Password     string             `json:"password" bson:"password"`
+	PasswordHash string             `json:"passwordhash" bson:"passwordhash"`
 }
 type Order struct {
 	UserID      string `json:"userid,omitempty" bson:"userid"`
@@ -49,14 +49,11 @@ func (us *UserService) ByID(id primitive.ObjectID) (*Users, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := Collection.Find(ctx, filter)
+	var User Users
+	err := Collection.FindOne(ctx, filter).Decode(&User)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(result)
-
-	var User Users
-	result.Decode(&User)
 
 	return &User, nil
 }
@@ -113,20 +110,14 @@ func (us *UserService) ByEmail(email string) (*Users, error) {
 	filter := bson.M{"email": email}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 
-	result, err := Collection.Find(ctx, filter)
+	defer cancel()
+	var User Users
+	err := Collection.FindOne(ctx, filter).Decode(&User)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(result)
 
-	var User Users
-	result.Decode(&User)
-	fmt.Println(fmt.Sprintf("%v", User))
-	fmt.Println("This is the password hash stored in here :")
-	fmt.Println(User.PasswordHash)
-	fmt.Println("---")
 	return &User, nil
 
 }
