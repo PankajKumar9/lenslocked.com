@@ -79,7 +79,7 @@ func main() {
 	}
 
 	fmt.Println("Inserted from outside", inserted.Email)
-
+	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 	http.ListenAndServe(":3000", r)
 
 }

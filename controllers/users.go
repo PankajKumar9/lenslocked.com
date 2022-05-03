@@ -53,8 +53,9 @@ func (u *UsersSite) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Fprintln(w, user)
+	signIn(w,&user)
+	//fmt.Fprintln(w, user)
+	http.Redirect(w,r,"/cookietest",http.StatusFound)
 
 	// fmt.Fprintln(w, r.PostForm["email"])
 	// // fmt.Fprintln(w, r.PostFormValue("email"))
@@ -74,13 +75,37 @@ func (u *UsersSite) Login(w http.ResponseWriter, r *http.Request) {
 	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
-	fmt.Println(form.Password)
-	fmt.Println("the email is:", form.Email)
+
 	user, err := u.us.Authenticate(form.Email, form.Password)
 	//do something with the login form
 	if err != nil {
 		fmt.Fprintln(w, err)
+		return
 	}
-	fmt.Fprintln(w, "yaha aaya @xx")
+	// fmt.Fprintln(w, "yaha aaya @xx")
+	// fmt.Fprintln(w, user)
+	signIn(w,user)
+	http.Redirect(w,r,"/cookietest",http.StatusFound)
+	//we would like to write after setting cookie
 	fmt.Fprintln(w, user)
+}
+
+func signIn(w http.ResponseWriter, user *Users){
+	cookie := http.Cookie{
+		Name:  "email",
+		Value: user.Email,
+	}
+	http.SetCookie(w, &cookie)
+}
+
+func (u *UsersSite) CookieTest(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("email")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprintln(w, "Email is : ", cookie.Value)
+	fmt.Fprintln(w, "\n ")
+	fmt.Fprintln(w, "Email is : ", cookie)
+
 }
