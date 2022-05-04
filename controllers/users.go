@@ -7,7 +7,7 @@ import (
 	"github.com/PankajKumar9/lenslocked.com/views"
 )
 
-const userPwPepper = ""
+
 
 type UsersSite struct {
 	NewView   *views.View

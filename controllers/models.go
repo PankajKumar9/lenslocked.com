@@ -7,6 +7,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/PankajKumar9/lenslocked.com/hash"
+	"github.com/PankajKumar9/lenslocked.com/rand"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,7 +22,18 @@ var (
 	ErrInvalidPassword = errors.New("models: incorrect password provided")
 )
 
-type UserService struct{}
+const userPwPepper = "abcd"
+const hmacSecretKey = "secret-hmac-key"
+
+//TODO : add db context somewhere in here
+type UserService struct {
+	hmac hash.HMAC
+}
+
+func NewUserService() (*UserService, error) {
+	hmac := hash.NewHMAC(hmacSecretKey)
+	return &UserService{hmac: hmac}, nil
+}
 
 type Netflix struct {
 	ID      primitive.ObjectID `json:"_id,omitempty" bson: "_id,omitempty"`
@@ -36,6 +49,8 @@ type Users struct {
 	Orders       []Order            `json:"orders,omitempty" bson:"orders"`
 	Password     string             `json:"password" bson:"password"`
 	PasswordHash string             `json:"passwordhash" bson:"passwordhash"`
+	Remember     string             `json:"remember" bson:"remember"`
+	RememberHash string             `json:"remember" bson:"remember"`
 }
 type Order struct {
 	UserID      string `json:"userid,omitempty" bson:"userid"`
@@ -71,7 +86,16 @@ func (us *UserService) Create(user *Users) (*Users, error) {
 	for i := range user.Orders {
 		user.Orders[i].UserID = user._id.Hex()
 	}
-	//user.Password = ""
+	user.Password = ""
+	if user.Remember != "" {
+		token,err := rand.RememberToken()
+		if err != nil{
+			return user ,err
+		}
+		user.Remember = token
+		
+	}
+	user.RememberHash = us.hmac.Hash(user.Remember)
 	z := true
 	inserted, err := Collection.InsertOne(context.Background(), user, &options.InsertOneOptions{BypassDocumentValidation: &z})
 	if err != nil {
@@ -84,14 +108,22 @@ func (us *UserService) Create(user *Users) (*Users, error) {
 }
 
 func (us *UserService) Update(user *Users) error {
+	if user.Remember != "" {
+		user.RememberHash = us.hmac.Hash(user.Remember)
+	}
 	id := user._id
 
 	filter := bson.M{"_id": id}
 	ud := bson.M{}
+
 	ud["name"] = user.Name
 	ud["email"] = user.Email
 	ud["color"] = user.Color
 	ud["orders"] = user.Orders
+	ud["password"] = user.Password
+	ud["passwordhash"] = user.PasswordHash
+	ud["remember"] = user.Remember
+	ud["rememberhash"] = user.RememberHash
 
 	update := bson.M{"$set": ud}
 
@@ -150,6 +182,23 @@ func (us *UserService) Delete(id primitive.ObjectID) error {
 	}
 	fmt.Println("movie got deleted with delete count", deleteCount)
 	return nil
+}
+
+func (us *UserService) ByRemember(token string) (*Users, error) {
+	hashedToken := us.hmac.Hash(token)
+	filter := bson.M{"rememberhash": hashedToken}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+	defer cancel()
+	var User Users
+	err := Collection.FindOne(ctx, filter).Decode(&User)
+	if err != nil {
+		panic(err)
+	}
+
+	return &User, nil
+
 }
 
 /*

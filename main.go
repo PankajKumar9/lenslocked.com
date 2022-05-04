@@ -5,8 +5,6 @@ package main
 //init functions for packages will run first
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/PankajKumar9/lenslocked.com/controllers"
@@ -63,22 +61,22 @@ func main() {
 	// r.NotFoundHandler = http.HandlerFunc(NotFound)
 	r.Handle("/login", usersC.LoginView).Methods("GET")
 	r.HandleFunc("/login", usersC.Login).Methods("POST")
-	var u controllers.Users
-	u.Password = "hello there"
-	lx := controllers.UserService{}
-	controllers.CreateOrder(u, 1001, "Fake description #1")
-	y := controllers.Order{
-		UserID:      "abcd",
-		Amount:      60,
-		Description: "straing from main",
-	}
-	u.Orders = []controllers.Order{y}
-	inserted, err := lx.Create(&u)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//var u controllers.Users
+	//u.Password = "hello there"
+	//lx := controllers.UserService{}
+	//controllers.CreateOrder(u, 1001, "Fake description #1")
+	// y := controllers.Order{
+	// 	UserID:      "abcd",
+	// 	Amount:      60,
+	// 	Description: "straing from main",
+	// }
+	// u.Orders = []controllers.Order{y}
+	// inserted, err := lx.Create(&u)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println("Inserted from outside", inserted.Email)
+	//fmt.Println("Inserted from outside", inserted.Email)
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 	http.ListenAndServe(":3000", r)
 
