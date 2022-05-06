@@ -50,7 +50,7 @@ type Users struct {
 	Password     string             `json:"password" bson:"password"`
 	PasswordHash string             `json:"passwordhash" bson:"passwordhash"`
 	Remember     string             `json:"remember" bson:"remember"`
-	RememberHash string             `json:"remember" bson:"remember"`
+	RememberHash string             `json:"rememberhash" bson:"rememberhash"`
 }
 type Order struct {
 	UserID      string `json:"userid,omitempty" bson:"userid"`
@@ -96,12 +96,13 @@ func (us *UserService) Create(user *Users) (*Users, error) {
 		
 	}
 	user.RememberHash = us.hmac.Hash(user.Remember)
+	fmt.Println("yaha fatne laga")
 	z := true
 	inserted, err := Collection.InsertOne(context.Background(), user, &options.InsertOneOptions{BypassDocumentValidation: &z})
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("yaha tak fata")
 	fmt.Println("Inserted one movie in db with id", inserted.InsertedID)
 	return user, nil
 

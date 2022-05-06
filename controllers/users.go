@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/PankajKumar9/lenslocked.com/rand"
 	"github.com/PankajKumar9/lenslocked.com/views"
 )
-
-
 
 type UsersSite struct {
 	NewView   *views.View
@@ -53,9 +52,13 @@ func (u *UsersSite) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	signIn(w,&user)
+	err = u.signIn(w, &user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	//fmt.Fprintln(w, user)
-	http.Redirect(w,r,"/cookietest",http.StatusFound)
+	http.Redirect(w, r, "/cookietest", http.StatusFound)
 
 	// fmt.Fprintln(w, r.PostForm["email"])
 	// // fmt.Fprintln(w, r.PostFormValue("email"))
@@ -84,28 +87,52 @@ func (u *UsersSite) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Fprintln(w, "yaha aaya @xx")
 	// fmt.Fprintln(w, user)
-	signIn(w,user)
-	http.Redirect(w,r,"/cookietest",http.StatusFound)
+	err = u.signIn(w, user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/cookietest", http.StatusFound)
 	//we would like to write after setting cookie
 	fmt.Fprintln(w, user)
 }
 
-func signIn(w http.ResponseWriter, user *Users){
+func (u *UsersSite) signIn(w http.ResponseWriter, user *Users) error {
+	//if user.Remember == "" {
+	token, err := rand.RememberToken()
+	if err != nil {
+		return err
+	}
+	user.Remember = token
+	err = u.us.Update(user)
+	if err != nil {
+		return err
+	}
+
+	//}
 	cookie := http.Cookie{
-		Name:  "email",
-		Value: user.Email,
+		Name:  "remember_token",
+		Value: user.Remember,
 	}
 	http.SetCookie(w, &cookie)
+	return nil
 }
 
 func (u *UsersSite) CookieTest(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("email")
+	cookie, err := r.Cookie("remember_token")
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintln(w, "Email is : ", cookie.Value)
-	fmt.Fprintln(w, "\n ")
-	fmt.Fprintln(w, "Email is : ", cookie)
+	user, err := u.us.ByRemember(cookie.Value)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+
+	}
+	fmt.Fprintln(w, user)
+	// fmt.Fprintln(w, "Email is : ", cookie.Value)
+	// fmt.Fprintln(w, "\n ")
+	// fmt.Fprintln(w, "Email is : ", cookie)
 
 }
