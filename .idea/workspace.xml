@@ -5,11 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04b4406d-a007-4dc4-9997-83b86a4e0ba5" name="Changes" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/lenslocked.com.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/models.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/users/new.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/users/new.gohtml" afterDir="false" />
+>>>>>>> 55b9d11aa1481764d097394867995ab8e9555604
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +36,12 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+>>>>>>> 55b9d11aa1481764d097394867995ab8e9555604
   <component name="ProjectId" id="27TrixFVO0AUxl0bCH27693MNO1" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -45,10 +61,32 @@
     <property name="go.watchers.conflict.with.on.save.actions.check.performed" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/views/layouts" />
+    </key>
+  </component>
+>>>>>>> 55b9d11aa1481764d097394867995ab8e9555604
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+>>>>>>> 55b9d11aa1481764d097394867995ab8e9555604
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
